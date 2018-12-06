@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
+import { Subject, ReplaySubject } from 'rxjs';
 declare var gapi: any;
 
 @Injectable({
@@ -16,7 +17,10 @@ export class AuthService {
   // included, separated by spaces.
   private static readonly SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
   authInst: gapi.auth2.GoogleAuth;
-  isSignedIn: any;
+  
+  isSignedIn$ = new ReplaySubject<boolean>()
+  isLoaded$ = new Subject<boolean>()
+  spreadsheets: gapi.client.sheets.SpreadsheetsResource;
 
   constructor(private zone: NgZone) {
     this.load();
@@ -36,6 +40,16 @@ export class AuthService {
           this.authInst.isSignedIn.listen((status) => {
             this.updateSigninStatus(status);
           });
+
+          gapi.client.load('sheets', 'v4').then(() => {
+            this.zone.run(() => {
+              this.spreadsheets = gapi.client.sheets.spreadsheets
+              this.isLoaded$.complete()
+            })
+          }, (reason) => {
+            console.log(reason)
+          });
+
           // // Handle the initial sign-in state.
           this.updateSigninStatus(this.authInst.isSignedIn.get());
         })
@@ -45,7 +59,7 @@ export class AuthService {
 
   updateSigninStatus(status: boolean): any {
     this.zone.run(() => {
-      this.isSignedIn = status;
+      this.isSignedIn$.next(status);
     })
   }
 
