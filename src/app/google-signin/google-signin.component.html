@@ -1,12 +1,12 @@
-<button (click)="click()">{{ isSignedIn && 'Sign Out' || 'Sign In'}}</button>
+<button *ngIf="isLoaded" (click)="click()">{{ isSignedIn && 'Sign Out' || 'Sign In'}}</button>
 
 <table border="1" style="border-collapse: collapse">
   <tr *ngFor="let row of data; let first = first">
     <ng-container *ngIf="first">
-      <th>{{ row[0] }}</th><th>{{ row[1] }}</th>
+      <th>{{ row[0] }}</th><th>{{ row[1] }}</th><th>{{ row[2] }}</th>
     </ng-container>
     <ng-container *ngIf="!first">
-      <td>{{ row[0] }}</td><td>{{ row[1] }}</td>
+      <td>{{ row[0] }}</td><td>{{ row[1] }}</td><td>{{ row[2] }}</td>
     </ng-container>
   </tr>
 </table>

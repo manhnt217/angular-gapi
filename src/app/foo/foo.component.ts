@@ -11,6 +11,6 @@ export class FooComponent implements OnInit {
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
-    this.authService.load()
+    this.authService.load();
   }
 }

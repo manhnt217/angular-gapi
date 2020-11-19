@@ -11,15 +11,15 @@ export class AuthService {
   private static readonly API_KEY = 'AIzaSyC3niJh2MXefZPE_DODeHzPu8CMeHx1au8';
 
   // Array of API discovery doc URLs for APIs used by the quickstart
-  private static readonly DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+  private static readonly DISCOVERY_DOCS = ['https://sheets.googleapis.com/$discovery/rest?version=v4'];
 
   // Authorization scopes required by the API; multiple scopes can be
   // included, separated by spaces.
-  private static readonly SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
+  private static readonly SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
   authInst: gapi.auth2.GoogleAuth;
-  
-  isSignedIn$ = new ReplaySubject<boolean>()
-  isLoaded$ = new Subject<boolean>()
+
+  isSignedIn$ = new ReplaySubject<boolean>();
+  isLoaded$ = new Subject<boolean>();
   spreadsheets: gapi.client.sheets.SpreadsheetsResource;
 
   constructor(private zone: NgZone) {
@@ -43,24 +43,24 @@ export class AuthService {
 
           gapi.client.load('sheets', 'v4').then(() => {
             this.zone.run(() => {
-              this.spreadsheets = gapi.client.sheets.spreadsheets
-              this.isLoaded$.complete()
-            })
+              this.spreadsheets = gapi.client.sheets.spreadsheets;
+              this.isLoaded$.complete();
+            });
           }, (reason) => {
-            console.log(reason)
+            console.log(reason);
           });
 
           // // Handle the initial sign-in state.
           this.updateSigninStatus(this.authInst.isSignedIn.get());
-        })
-      })
-    })
+        });
+      });
+    });
   }
 
   updateSigninStatus(status: boolean): any {
     this.zone.run(() => {
       this.isSignedIn$.next(status);
-    })
+    });
   }
 
   signIn() {
